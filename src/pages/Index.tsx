@@ -1,39 +1,25 @@
 
 import React from 'react';
 import Navbar from '@/components/Navbar';
-import HeroSection from '@/components/HeroSection';
-import CalendarView from '@/components/CalendarView';
+import MedicationSchedule from '@/components/MedicationSchedule';
 import MedicationList from '@/components/MedicationList';
 import EmergencyButton from '@/components/EmergencyButton';
+import AnimatedTransition from '@/components/AnimatedTransition';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main className="flex-1">
-        <HeroSection />
-        <CalendarView />
-        <MedicationList />
-        <EmergencyButton />
-      </main>
-      <footer className="border-t py-6 md:py-0">
-        <div className="container flex flex-col md:flex-row items-center justify-between gap-4 md:h-20 px-4 md:px-6">
-          <p className="text-sm text-muted-foreground">
-            © 2023 VitaCheck. Todos os direitos reservados.
-          </p>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">
-              Política de Privacidade
-            </a>
-            <a href="#" className="hover:text-foreground transition-colors">
-              Termos de Uso
-            </a>
-            <a href="#" className="hover:text-foreground transition-colors">
-              Contato
-            </a>
+      <main className="flex-1 px-4 py-4">
+        <AnimatedTransition>
+          <h1 className="text-2xl font-bold mb-4">VitaCheck</h1>
+          <MedicationSchedule />
+          <MedicationList />
+          <div className="fixed bottom-6 right-6">
+            <EmergencyButton />
           </div>
-        </div>
-      </footer>
+        </AnimatedTransition>
+      </main>
     </div>
   );
 };

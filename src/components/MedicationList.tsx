@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { Search, Plus, AlertTriangle, Check } from 'lucide-react';
+import { Search, Plus, AlertTriangle, Check, Clock, X } from 'lucide-react';
 import AnimatedTransition from './AnimatedTransition';
 import { cn } from '@/lib/utils';
+import { Button } from './ui/button';
 
 interface Medication {
   id: number;
@@ -88,87 +89,81 @@ const MedicationList = () => {
   };
 
   return (
-    <section className="py-8">
-      <div className="container px-4 md:px-6">
-        <AnimatedTransition>
-          <div className="flex flex-col space-y-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <h2 className="text-2xl font-semibold">Medicamentos para Hoje</h2>
-              
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
-                  <input
-                    type="text"
-                    placeholder="Buscar medicamento..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
+    <section className="pb-24">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-primary">Medicamentos de Hoje</h2>
+        <Button size="sm" variant="outline">
+          <Plus size={16} className="mr-1" />
+          Adicionar
+        </Button>
+      </div>
+      
+      <div className="relative mb-4">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+        <input
+          type="text"
+          placeholder="Buscar medicamento..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+      
+      {/* Medication list */}
+      <div className="grid grid-cols-1 gap-3">
+        {filteredMedications.length > 0 ? (
+          filteredMedications.map((med) => (
+            <div 
+              key={med.id} 
+              className={cn(
+                "glass-card p-3 flex items-center justify-between transition-all",
+                med.taken && "opacity-70"
+              )}
+            >
+              <div className="flex items-center gap-3">
+                <div className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center",
+                  med.taken ? "bg-green-100 text-green-600" : "bg-primary/10 text-primary"
+                )}>
+                  {med.taken ? <Check size={18} /> : <Clock size={18} />}
                 </div>
                 
-                <button className="inline-flex items-center justify-center rounded-lg font-medium shadow transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4">
-                  <Plus size={18} className="mr-2" />
-                  Adicionar
-                </button>
-              </div>
-            </div>
-            
-            {/* Medication list */}
-            <div className="mt-6 grid grid-cols-1 gap-4">
-              {filteredMedications.length > 0 ? (
-                filteredMedications.map((med) => (
-                  <div 
-                    key={med.id} 
-                    className={cn(
-                      "glass-card p-4 flex items-center justify-between transition-all",
-                      med.taken && "opacity-70"
-                    )}
-                  >
-                    <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0">
-                        <div className={cn(
-                          "w-10 h-10 rounded-full flex items-center justify-center",
-                          med.taken ? "bg-green-100 text-green-600" : "bg-primary/10 text-primary"
-                        )}>
-                          {med.taken ? <Check size={20} /> : med.nextDose}
-                        </div>
+                <div>
+                  <div className="flex items-center">
+                    <h3 className="font-medium">{med.name}</h3>
+                    {med.lowStock && (
+                      <div className="ml-2 px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full flex items-center text-xs">
+                        <AlertTriangle size={12} className="mr-1" />
+                        Estoque baixo
                       </div>
-                      
-                      <div>
-                        <div className="flex items-center">
-                          <h3 className="font-medium">{med.name}</h3>
-                          {med.lowStock && (
-                            <div className="ml-2 px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full flex items-center text-xs">
-                              <AlertTriangle size={12} className="mr-1" />
-                              Estoque baixo
-                            </div>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {med.dosage} · {med.frequency} · Estoque: {med.stock}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    {!med.taken && (
-                      <button 
-                        onClick={() => markAsTaken(med.id)}
-                        className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-                      >
-                        Marcar como tomado
-                      </button>
                     )}
                   </div>
-                ))
-              ) : (
-                <div className="glass-card p-8 text-center">
-                  <p className="text-muted-foreground">Nenhum medicamento encontrado.</p>
+                  <p className="text-xs text-muted-foreground">
+                    {med.dosage} · {med.frequency} · {med.nextDose}
+                  </p>
                 </div>
+              </div>
+              
+              {!med.taken ? (
+                <Button 
+                  onClick={() => markAsTaken(med.id)}
+                  size="sm"
+                  variant="outline"
+                  className="text-xs h-8"
+                >
+                  <Check size={14} className="mr-1" />
+                  Tomado
+                </Button>
+              ) : (
+                <span className="text-xs text-green-600 font-medium">Tomado hoje</span>
               )}
             </div>
+          ))
+        ) : (
+          <div className="glass-card p-6 text-center">
+            <p className="text-muted-foreground">Nenhum medicamento encontrado.</p>
           </div>
-        </AnimatedTransition>
+        )}
       </div>
     </section>
   );
