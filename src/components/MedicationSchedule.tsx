@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Pill, Plus, ArrowLeft, ArrowRight, Cube, Square } from 'lucide-react';
+import { Pill, Plus, ArrowLeft, ArrowRight, Square } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AnimatedTransition from './AnimatedTransition';
 
@@ -57,7 +57,7 @@ const MedicationSchedule = () => {
         <h2 className="text-xl font-semibold text-primary dark:text-primary-foreground">Organização Semanal</h2>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={toggle3D}>
-            {is3D ? <Square size={16} /> : <Cube size={16} />}
+            {is3D ? <Square size={16} /> : <Pill size={16} />}
           </Button>
           <Button variant="outline" size="sm" onClick={toggleView}>
             {view === 'week' ? 'Ver Mensal' : 'Ver Semanal'}
